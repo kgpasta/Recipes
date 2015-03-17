@@ -23,7 +23,7 @@ def parseFoods():
         
 def parseFoodGroups():
     foodGroupFile = open("KnowledgeBase/FD_GROUP.txt","r")
-    foodGroups = []
+    foodGroups = {}
     
     for line in foodGroupFile:
         line = line.replace("~","")
@@ -31,13 +31,13 @@ def parseFoodGroups():
         foodGroup = {}
         foodGroup['ID'] = lineArray[0]
         foodGroup['description'] = lineArray[1].replace("\n","")
-        foodGroups.append(foodGroup)
+        foodGroups[lineArray[0]] = foodGroup
         
     return foodGroups
     
 def parseWeights():
     weightFile = open("KnowledgeBase/WEIGHT.txt", "r")
-    weights = []
+    weights = {}
     
     for line in weightFile:
         line = line.replace("~","")
@@ -47,7 +47,10 @@ def parseWeights():
         weight["amount"] = lineArray[2]
         weight["unit"] = lineArray[3]
         weight["grams"] = lineArray[4].replace("\n","")
-        weights.append(weight)
+        if lineArray[0] in weights.keys():
+            weights[lineArray[0]].append(weight)
+        else:
+            weights[lineArray[0]] = [weight]
         
     return weights
     

@@ -9,24 +9,25 @@ def identifyIngredients(recipe,foodTable,stoplist):
         matchArray = {}
         for key in foodTable:
             if "description" in foodTable[key]:
-                match = arrayMatch(stoplist, ingredient["name"],foodTable[key]["description"],foodTable[key]["ID"])
+                match = arrayMatch(ingredient["name"],foodTable[key], stoplist)
                 if match[0] > 0:
-                    matchArray[match[1]] = match[0]
+                    matchArray[match[2]] = match[0]
         
         if(len(matchArray) > 0):
             ingredient["ID"] = max(matchArray.iterkeys(), key=lambda(x): matchArray[x])
+            ingredient["foodGroup"] = foodTable[ingredient["ID"]]["foodGroup"]
         else:
-            ingredient["ID"] = "Not found"
-        
-        print ingredient["ID"]
-        
+            ingredient["ID"] = "N/A"
+            ingredient["foodGroup"] = "N/A"
         
         
 
 
-def arrayMatch(stoplist,one,two,ID):
+def arrayMatch(one,two,stoplist = []):
     oneArr = one.lower().replace(',','').split()
-    twoArr = two.lower().split(", ")
+    description = two["description"]
+    ID = two["ID"]
+    twoArr = description.lower().split(", ")
     
     for word in twoArr:
         if 'or' in word.split():
@@ -42,7 +43,7 @@ def arrayMatch(stoplist,one,two,ID):
                 else:
                     matches = matches + 1
     
-    return [matches,two]
+    return [matches,two, ID]
     
 def matchWord(word1, word2):
     if(word1 == word2):
