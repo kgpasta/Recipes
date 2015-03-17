@@ -13,12 +13,11 @@ def main():
     foodGroupTable = parseFoods.parseFoodGroups()
     weightTable = parseFoods.parseWeights()
     stoplist = parseFoods.createStopList()
-
-    veggieSubs = transformation.findVeggieSubs(foodTable)
     
     ingredients.identifyIngredients(recipe,foodTable,stoplist)
     
-    transformation.transformVegetarian(recipe, foodTable, weightTable, veggieSubs, stoplist)
+    #transformation.transformVegetarian(recipe, foodTable, weightTable, stoplist)    
+    transformation.transformVegan(recipe, foodTable, weightTable, stoplist)
     
     print recipe
     

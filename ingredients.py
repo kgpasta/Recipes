@@ -20,8 +20,6 @@ def identifyIngredients(recipe,foodTable,stoplist):
             ingredient["ID"] = "N/A"
             ingredient["foodGroup"] = "N/A"
         
-        
-
 
 def arrayMatch(one,two,stoplist = []):
     oneArr = one.lower().replace(',','').split()

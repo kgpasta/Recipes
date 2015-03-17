@@ -4,10 +4,20 @@ Created on Tue Mar 17 14:58:15 2015
 
 @author: Kaustubh
 """
+from fractions import Fraction
 
 def convertWeight(ingredient, newIngredient, weightTable):
+    if "ID" not in newIngredient:
+        newIngredient["ID"] = "00000"
+        newIngredient["amount"] = 1
+        newIngredient["measurement"] = "piece"
+        return    
+    
     oldID = ingredient["ID"]
-    oldAmount = float(ingredient["amount"])
+    if ingredient["amount"].find("/") > -1:
+        oldAmount = float(Fraction(ingredient["amount"]))
+    else:  
+        oldAmount = float(ingredient["amount"])
     oldMeasurement = ingredient["measurement"]
     oldWeights = weightTable[oldID]
     
@@ -31,7 +41,7 @@ def convertWeight(ingredient, newIngredient, weightTable):
     for entry in newWeights:
         if matchMeasure(oldMeasurement, entry["unit"]):
             factor = grams / float(entry["grams"])
-            newIngredient["amount"] = float(entry["amount"]) * factor
+            newIngredient["amount"] = roundToMeasure(float(entry["amount"]) * factor)
             newIngredient["measurement"] = entry["unit"]
             
     if newIngredient["amount"] == -1:
