@@ -4,7 +4,7 @@ import nltk
 import sys
 import re
 
-def get_recipe(url = 'http://allrecipes.com/Recipe/Healthier-Oven-Roasted-Potatoes/Detail.aspx?evt19=1&referringHubId=84'):
+def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Grilled-Chicken-Teriyaki/Detail.aspx?soid=recs_recipe_3'):
     if len(sys.argv) > 1:
         url = sys.argv[1]
 
@@ -26,10 +26,17 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Healthier-Oven-Roasted-Potato
         else:
             name = " "
         if (ingredient.find(id = "lblIngAmount") is not None):
-            amount = ingredient.find(id = "lblIngAmount").text
+            amountMeasure = ingredient.find(id = "lblIngAmount").text.split(" ")
+            amount = amountMeasure[0]
+            if len(amountMeasure) == 2:
+                measurement = amountMeasure[1]
+            else:
+                measurement = "piece"
         else:
             amount = " "
-        ingredients.append({"name": name, "amount": amount})
+            measurement = " "
+        ingredients.append({"name": name, "amount": amount, "measurement": measurement})
     recipe["ingredients"] = ingredients
-    print recipe
+    #print recipe
+    return recipe
 get_recipe()

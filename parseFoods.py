@@ -7,7 +7,7 @@ Created on Thu Mar 12 22:18:33 2015
 
 def parseFoods():
     foodFile = open("KnowledgeBase/FOOD_DES.txt","r")
-    foods = []
+    foods = {}
     
     for line in foodFile:
         line = line.replace("~","")
@@ -16,8 +16,7 @@ def parseFoods():
         food['ID'] = lineArray[0]
         food['foodGroup'] = lineArray[1]
         food['description'] = lineArray[2]
-        foods.append(food)
-
+        foods[lineArray[0]] = food
 
     return foods
         
@@ -50,7 +49,14 @@ def parseWeights():
         weight["grams"] = lineArray[4].replace("\n","")
         weights.append(weight)
         
-    print weights[0]
+    return weights
     
-parseWeights()
+def createStopList():
+    stoplistFile = open("stoplist.txt", "r")
+    stoplist = []
+    
+    for line in stoplistFile:
+        stoplist.append(line.strip())
+        
+    return stoplist
         
