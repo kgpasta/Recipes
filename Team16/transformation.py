@@ -15,19 +15,21 @@ sausages = ['0700']
 pork = ['1000']
 beef = ['1300']
 game = ['1700']
-meats = poultry + sausages + pork + beef + game
 seafood = ['1500']
+vegetables = ['1100']
+grains = ['1800','2000']
+meats = poultry + sausages + pork + beef + game
 nonVeg = meats + seafood
 nonVegan = nonVeg + dairyAndEgg + fats
-highCal = fats
-grains = ['1800','2000']
+highCal = sausages + pork + beef + fats + grains + vegetables
+highFat = highCal
 cuisineFoodGroups = meats + spicesAndHerbs + sauces + grains
 veggieSubWords = ["tofu", "potatoes", "beans", "lentil", "eggplant", "mushrooms", "tempeh", "tap water"]
 nonVeggieSubWords = ["chicken", "sausage", "pork", "beef", "lamb", "salmon"]
 veganSubWords = ["tofu", "potatoes", "tempeh", "beans", "lentil", "eggplant", "mushrooms", "soymilk", "margarine-like", "maple syrup", "tap water"]
 nonVeganSubWords = ["chicken", "sausage", "pork", "beef", "lamb", "salmon", "milk", "butter", "honey"]
-lowCalSubWords = ["skim milk", "brown rice", "lean ham", "egg whites", "turkey sausage", "ground turkey", "english muffins", "diet margarine", "whipped butter", "tap water"]
-nonLowCalSubWords = ["milk", "white rice", "pork", "eggs", "sausage", "beef", "bagels", "margarine", "butter"]
+lowCalSubWords = ["soymilk", "margarine", "margarine-like", "ham", "turkey sausage", "ground turkey", "cauliflower", "tap water"]
+lowFatSubWords = ["soymilk", "soy yogurt", "margarine", "margarine-like", "turkey sausage", "ground turkey", "chicken"]
 mexicanSubWords = { 
     "grains" : ["flour tortilla", "white rice", "brown rice"],
     "sauces" : ["salsa sauce", "hot sauce"], 
@@ -227,86 +229,76 @@ def cuisineSub(ingredient, foodTable, subTable):
 
 def transformLowCal(recipe, foodTable, weightTable):
     ingredients = recipe["ingredients"]
-    recipe["title"] = "Low calorie alternative to " + recipe["title"]
+    recipe["title"] = "Lower calorie alternative to " + recipe["title"]
     
     for index,ingredient in enumerate(ingredients):
         if ingredient["foodGroup"] in highCal:
-            newIngredient = LowCalSub(ingredient, foodTable)
+            newIngredient = lowCalSub(ingredient, foodTable)
             weights.convertWeight(ingredient, newIngredient, weightTable)
             ingredients[index] = newIngredient
             
-def LowCalSub(ingredient,foodTable):
-    LowCalSubs = findSubs(foodTable, LowCalSubWords, highCal)
+def lowCalSub(ingredient,foodTable):
+    lowCalSubs = findSubs(foodTable, lowCalSubWords, highCal)
     substitute = ""
     if ingredient["foodGroup"] in sausages:
         substitute = "turkey sausage"
     elif ingredient["foodGroup"] in pork:
-        substitute = "lean ham"
+        substitute = "ham"
     elif ingredient["foodGroup"] in beef:
         substitute = "ground turkey"
     elif ingredient["foodGroup"] in dairyAndEgg:
-        if ingredient["name"].find("egg") > -1:
-            substitute = "egg whites"
-        elif ingredient["name"].find("yogurt") > -1:
+        if ingredient["name"].find("yogurt") > -1:
             substitute = "soy yogurt"
         else:
-            substitute = "skim milk"
+            substitute = "soymilk"
     elif ingredient["foodGroup"] in fats:
         if ingredient["name"].find("butter") > -1:
-            substitute = "whipped butter"
+            substitute = "margarine"
         elif ingredient["name"].find("margarine") > -1:
-            substitute = "diet margarine"
-	elif ingredient["foodGroup"] in grains:
-		if ingredient["name"].find("rice") > -1:
-			substitute = "brown rice"
-		elif ingredient["name"].find("bagels") > -1:
+            substitute = "margarine-like"
+    elif ingredient["foodGroup"] in grains:
+        if ingredient["name"].find("rice") > -1:
+            substitute = "brown rice"
+        elif ingredient["name"].find("bread") > -1:
 			substitute = "english muffins"
-    else: 
-        substitute = "tap water"
+    elif ingredient["foodGroup"] in vegetables:
+        if ingredient["name"].find("potatoes") > -1:
+            substitute = "cauliflower"
     
-    return createSubstitute(substitute, lowCalSubs, foodTable)
+    return createSubstitute(substitute, lowCalSubs, foodTable, ingredient)
 
-def transformNonLowCal(recipe, foodTable, weightTable):
+def transformLowFat(recipe, foodTable, weightTable):
     ingredients = recipe["ingredients"]
-    recipe["title"] = "Higher calorie alternative to " + recipe["title"]
+    recipe["title"] = "Lower fat alternative to " + recipe["title"]
     
     for index,ingredient in enumerate(ingredients):
-        if ingredient["foodGroup"] in highCal:
-            newIngredient = LowCalSub(ingredient, foodTable)
+        if ingredient["foodGroup"] in highFat:
+            newIngredient = lowFatSub(ingredient, foodTable)
             weights.convertWeight(ingredient, newIngredient, weightTable)
             ingredients[index] = newIngredient
             
-def LowCalSub(ingredient,foodTable):
-    LowCalSubs = findSubs(foodTable, LowCalSubWords, highCal)
+def lowFatSub(ingredient,foodTable):
+    lowFatSubs = findSubs(foodTable, lowFatSubWords, highFat)
     substitute = ""
     if ingredient["foodGroup"] in sausages:
         substitute = "turkey sausage"
     elif ingredient["foodGroup"] in pork:
-        substitute = "lean ham"
+        substitute = "chicken"
     elif ingredient["foodGroup"] in beef:
         substitute = "ground turkey"
     elif ingredient["foodGroup"] in dairyAndEgg:
-        if ingredient["name"].find("egg") > -1:
-            substitute = "egg whites"
-        elif ingredient["name"].find("yogurt") > -1:
+        if ingredient["name"].find("yogurt") > -1:
             substitute = "soy yogurt"
         else:
-            substitute = "skim milk"
+            substitute = "soymilk"
     elif ingredient["foodGroup"] in fats:
         if ingredient["name"].find("butter") > -1:
-            substitute = "whipped butter"
+            substitute = "margarine"
         elif ingredient["name"].find("margarine") > -1:
-            substitute = "diet margarine"
-	elif ingredient["foodGroup"] in grains:
-		if ingredient["name"].find("rice") > -1:
-			substitute = "brown rice"
-		elif ingredient["name"].find("bagels") > -1:
-			substitute = "english muffins"
-    else: 
-        substitute = "tap water"
+            substitute = "margarine-like"
     
-    return createSubstitute(substitute, lowCalSubs, foodTable)
-            
+    return createSubstitute(substitute, lowFatSubs, foodTable, ingredient)
+
 def findSubs(foodTable, subList, restrictions = []):
     subs = []
     for key in foodTable:
