@@ -16,7 +16,7 @@ KG
 
 1. Clone the repo
   ```
-  $ git clone https://github.com/mjhea0/flask-boilerplate.git
+  $ git clone https://github.com/kgpasta/Recipes.git
   $ cd Recipes
   ```
 
