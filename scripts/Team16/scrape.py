@@ -43,7 +43,7 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
     #     cells = row.findAll("th")
     #     cooking_tools.append(str(cells[0].findAll(text=True)[0]).lower())
 
-    #cooking_tools = ['spoon', 'cup', 'bowl', 'cutting board', 'knife', 'peeler', 'colander', 'strainer', 'grater', 'can opener', 'saucepan', 'frying pan', 'pan', 'baking dish', 'blender', 'spatula', 'tongs', 'garlic press', 'ladle', 'ricer', 'pot holder', 'rolling pin', 'scissors', 'whisk', 'skillet', 'wok', 'baking sheet', 'casserole dish', 'pot', 'slow cooker']
+    #cooking_tools = ['baking sheet', 'casserole dish', 'pot','spoon', 'cup', 'bowl', 'cutting board', 'knife','saucepan', 'frying pan', 'pan', 'peeler', 'colander', 'strainer', 'grater',  'baking dish', 'blender', 'spatula', 'tongs', 'garlic press', 'ladle', 'ricer', 'pot holder', 'rolling pin', 'skillet', 'wok', 'slow cooker']
     cooking_methods = ['peel', 'grate', 'cut', 'slice', 'simmer', 'pour', 'chop', 'blend', 'brown', 'carmelise', 'beat', 'dice', 'melt', 'poach', 'toss', 'roast', 'broil', 'roast', 'grill', 'sieve', 'knead', 'break', 'boil', 'crack', 'fry', 'scramble', 'stir', 'add', 'bake', 'saute',]
     primary_cooking_methods = ["bake", "fry", "broil", "roast", "grill"]
 
