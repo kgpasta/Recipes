@@ -6,7 +6,7 @@ Created on Thu Mar 12 22:18:33 2015
 """
 
 def parseFoods():
-    foodFile = open("KnowledgeBase/FOOD_DES.txt","r")
+    foodFile = open("../KnowledgeBase/FOOD_DES.txt","r")
     foods = {}
     
     for line in foodFile:
@@ -22,7 +22,7 @@ def parseFoods():
         
         
 def parseFoodGroups():
-    foodGroupFile = open("KnowledgeBase/FD_GROUP.txt","r")
+    foodGroupFile = open("../KnowledgeBase/FD_GROUP.txt","r")
     foodGroups = {}
     
     for line in foodGroupFile:
@@ -36,7 +36,7 @@ def parseFoodGroups():
     return foodGroups
     
 def parseWeights():
-    weightFile = open("KnowledgeBase/WEIGHT.txt", "r")
+    weightFile = open("../KnowledgeBase/WEIGHT.txt", "r")
     weights = {}
     
     for line in weightFile:

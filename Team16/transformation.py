@@ -4,11 +4,13 @@ Created on Tue Mar 17 12:50:45 2015
 
 @author: Kaustubh
 """
-import ingredients, weights
+import ingredients, weights, copy
 
 dairyAndEgg = ['0100']
+spicesAndHerbs = ['0200']
 fats = ['0400']
 poultry = ['0500']
+sauces = ['0600']
 sausages = ['0700']
 pork = ['1000']
 beef = ['1300']
@@ -17,10 +19,22 @@ meats = poultry + sausages + pork + beef + game
 seafood = ['1500']
 nonVeg = meats + seafood
 nonVegan = nonVeg + dairyAndEgg + fats
+grains = ['1800','2000']
+cuisineFoodGroups = meats + spicesAndHerbs + sauces + grains
 veggieSubWords = ["tofu", "potatoes", "beans", "lentil", "eggplant", "mushrooms", "tempeh", "tap water"]
 veganSubWords = ["tofu", "tempeh", "beans", "lentil", "eggplant", "mushrooms", "soymilk", "margarine-like", "maple syrup", "tap water"]
+mexicanSubWords = { 
+    "grains" : ["flour tortilla", "white rice", "brown rice"],
+    "sauces" : ["salsa sauce", "hot sauce"], 
+    "spices" : ["garlic", "cayenne spices"], 
+    "meats" : ["chicken", "pork", "beef"]}
+italianSubWords = {
+    "grains" : ["pasta", "garlic bread"],
+    "sauces" : ["marinara sauce", "alfredo sauce", "pesto sauce"],
+    "spices" : ["oregano", "basil", "rosemary", "thyme"],
+    "meats" : ["chicken", "beef", "steak", "italian sausage"]}
 
-def transformVegetarian(recipe, foodTable, weightTable, stoplist):
+def transformVegetarian(recipe, foodTable, weightTable):
     ingredients = recipe["ingredients"]
     recipe["title"] = "Vegetarian " + recipe["title"]
     
@@ -32,7 +46,7 @@ def transformVegetarian(recipe, foodTable, weightTable, stoplist):
             
     
 def veggieSub(ingredient, foodTable):
-    veggieSubs = findSubs(foodTable, nonVeg, veggieSubWords)
+    veggieSubs = findSubs(foodTable, veggieSubWords, nonVeg)
     substitute = ""
     if ingredient["foodGroup"] in poultry:
         substitute = "tofu"
@@ -51,7 +65,7 @@ def veggieSub(ingredient, foodTable):
     
     return createSubstitute(substitute, veggieSubs, foodTable)
     
-def transformVegan(recipe, foodTable, weightTable, stoplist):
+def transformVegan(recipe, foodTable, weightTable):
     ingredients = recipe["ingredients"]
     recipe["title"] = "Vegan " + recipe["title"]
     
@@ -62,7 +76,7 @@ def transformVegan(recipe, foodTable, weightTable, stoplist):
             ingredients[index] = newIngredient
             
 def veganSub(ingredient,foodTable):
-    veganSubs = findSubs(foodTable, nonVegan, veganSubWords)
+    veganSubs = findSubs(foodTable, veganSubWords, nonVegan)
     substitute = ""
     if ingredient["foodGroup"] in poultry:
         substitute = "tofu"
@@ -90,8 +104,53 @@ def veganSub(ingredient,foodTable):
             substitute = "tap water"
     
     return createSubstitute(substitute, veganSubs, foodTable)
+    
+def transformCuisine(cuisine, recipe, foodTable, weightTable):
+    ingredients = recipe["ingredients"]
+    recipe["title"] =  cuisine + " " + recipe["title"]
             
-def findSubs(foodTable,restrictions, subList):
+    subWords = None
+    if cuisine == "Mexican":
+        subWords = copy.deepcopy(mexicanSubWords)
+    elif cuisine == "Italian":
+        subWords = copy.deepcopy(italianSubWords)
+        
+    for index,ingredient in enumerate(ingredients):
+        if ingredient["foodGroup"] in cuisineFoodGroups:
+            newIngredient = cuisineSub(ingredient, foodTable, subWords)
+            weights.convertWeight(ingredient, newIngredient, weightTable)
+            ingredients[index] = newIngredient
+
+def cuisineSub(ingredient, foodTable, subTable):
+    subList = []
+    for key in subTable.keys():
+        subList = subList + subTable[key]
+    subs = findSubs(foodTable, subList)
+    substitute = ""
+    error = True
+    if ingredient["foodGroup"] in game:
+        if len(subTable["meats"]) > 0:
+            substitute = subTable["meats"].pop(0)
+            error = False
+    elif ingredient["foodGroup"] in spicesAndHerbs:
+        if len(subTable["spices"]) > 0:
+            substitute = subTable["spices"].pop(0)
+            error = False
+    elif ingredient["foodGroup"] in sauces:
+        if len(subTable["sauces"]) > 0:
+            substitute = subTable["grains"].pop(0)
+            error = False
+    elif ingredient["foodGroup"] in grains:
+        if len(subTable["grains"]) > 0:
+            substitute = subTable["grains"].pop(0)
+            error = False
+    
+    if error:
+        return ingredient
+        
+    return createSubstitute(substitute, subs, foodTable)    
+            
+def findSubs(foodTable, subList, restrictions = []):
     subs = []
     for key in foodTable:
         food = foodTable[key]
