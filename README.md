@@ -21,7 +21,7 @@ KG
 
 2. Initialize a virtual environment and install requirements
   ```
-  $pip install virtualenv
+  $ pip install virtualenv
   $ virtualenv --no-site-packages testEnv
   $ source testEnv/bin/activate
   $ cd Recipes
