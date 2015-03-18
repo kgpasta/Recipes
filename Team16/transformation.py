@@ -21,14 +21,14 @@ grains = ['1800','2000']
 meats = poultry + sausages + pork + beef + game
 nonVeg = meats + seafood
 nonVegan = nonVeg + dairyAndEgg + fats
-highCal = sausages + pork + beef + fats + grains + vegetables
-highFat = highCal
+highFat = sausages + pork + beef + fats + grains
+highCal = highFat
 cuisineFoodGroups = meats + spicesAndHerbs + sauces + grains
 veggieSubWords = ["tofu", "potatoes", "beans", "lentil", "eggplant", "mushrooms", "tempeh", "tap water"]
 nonVeggieSubWords = ["chicken", "sausage", "pork", "beef", "lamb", "salmon"]
 veganSubWords = ["tofu", "potatoes", "tempeh", "beans", "lentil", "eggplant", "mushrooms", "soymilk", "margarine-like", "maple syrup", "tap water"]
 nonVeganSubWords = ["chicken", "sausage", "pork", "beef", "lamb", "salmon", "milk", "butter", "honey"]
-lowCalSubWords = ["soymilk", "margarine", "margarine-like", "ham", "turkey sausage", "ground turkey", "cauliflower", "tap water"]
+lowCalSubWords = ["soymilk", "margarine", "margarine-like", "ham", "turkey sausage", "ground turkey", "tap water"]
 lowFatSubWords = ["soymilk", "soy yogurt", "margarine", "margarine-like", "turkey sausage", "ground turkey", "chicken"]
 mexicanSubWords = { 
     "grains" : ["flour tortilla", "white rice", "brown rice"],
@@ -103,7 +103,7 @@ def nonVeggieSub(ingredient, foodTable, word):
     if substitute == None:
         return ingredient
     
-    return createSubstitute(substitute, nonVeggieSubs, foodTable)
+    return createSubstitute(substitute, nonVeggieSubs, foodTable, ingredient)
     
 def transformVegan(recipe, foodTable, weightTable):
     ingredients = recipe["ingredients"]
@@ -141,7 +141,7 @@ def veganSub(ingredient,foodTable):
         else: 
             substitute = "tap water"
     
-    return createSubstitute(substitute, veganSubs, foodTable)
+    return createSubstitute(substitute, veganSubs, foodTable, ingredient)
     
 def transformNonVegan(recipe, foodTable, weightTable):
     ingredients = recipe["ingredients"]
@@ -180,7 +180,7 @@ def nonVeganSub(ingredient, foodTable, word):
     if substitute == None:
         return ingredient
     
-    return createSubstitute(substitute, nonVeganSubs, foodTable)
+    return createSubstitute(substitute, nonVeganSubs, foodTable, ingredient)
     
 def transformCuisine(cuisine, recipe, foodTable, weightTable):
     ingredients = recipe["ingredients"]
@@ -225,7 +225,7 @@ def cuisineSub(ingredient, foodTable, subTable):
     if error:
         return ingredient
         
-    return createSubstitute(substitute, subs, foodTable)    
+    return createSubstitute(substitute, subs, foodTable, ingredient)    
 
 def transformLowCal(recipe, foodTable, weightTable):
     ingredients = recipe["ingredients"]
@@ -261,10 +261,6 @@ def lowCalSub(ingredient,foodTable):
             substitute = "brown rice"
         elif ingredient["name"].find("bread") > -1:
 			substitute = "english muffins"
-    elif ingredient["foodGroup"] in vegetables:
-        if ingredient["name"].find("potatoes") > -1:
-            substitute = "cauliflower"
-    
     return createSubstitute(substitute, lowCalSubs, foodTable, ingredient)
 
 def transformLowFat(recipe, foodTable, weightTable):
