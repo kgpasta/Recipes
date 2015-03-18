@@ -50,7 +50,7 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
         else:
             amount = " "
             measurement = " "
-        ingredients.append({"name": str(name), "amount": str(amount), "measurement": str(measurement), "preparation" : preparation, "prep-description": prepdescription, "descriptor": ""})
+        ingredients.append({"name": (name), "amount": str(amount), "measurement": str(measurement), "preparation" : preparation, "prep-description": prepdescription, "descriptor": ""})
 
     recipe["ingredients"] = ingredients
 
