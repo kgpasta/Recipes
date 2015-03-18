@@ -16,3 +16,5 @@ nltk==3.0
 numpy
 enum34
 beautifulsoup4==4.3.2
+tablib
+requests
