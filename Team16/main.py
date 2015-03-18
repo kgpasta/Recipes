@@ -19,8 +19,7 @@ def main():
     #transformation.transformVegetarian(recipe, foodTable, weightTable)    
     #transformation.transformVegan(recipe, foodTable, weightTable)
     transformation.transformCuisine("Mexican", recipe, foodTable, weightTable)
-    
-    
+    print recipe
     
     return recipe
     
