@@ -52,6 +52,8 @@ def convertWeight(ingredient, newIngredient, weightTable):
 def matchMeasure(word1, word2):
     if word1 == word2:
         return True
+    elif (word1 + "s") == word2:
+        return True
     
     return False
     
