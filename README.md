@@ -19,9 +19,16 @@ KG
   $ git clone https://github.com/kgpasta/Recipes.git
   $ cd Recipes
   ```
-
-2. Either activate our virtualenv, or initialize your own and install requirements
+2. Install virtualenv
   ```
+  $pip install virtualenv
+
+  ```
+
+3. Either activate our virtualenv, or initialize your own and install requirements
+  ```
+
+
   $ source env/bin/activate
 
   OR
@@ -32,11 +39,11 @@ KG
   ```
 
 
-3. Run the development server:
+4. Run the development server:
   ```
   $ python app.py
   ```
 
-4. Navigate to [http://localhost:5000](http://localhost:5000)
+5. Navigate to [http://localhost:5000](http://localhost:5000)
 
 
