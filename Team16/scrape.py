@@ -4,7 +4,7 @@ import nltk
 import sys
 import re
 
-def get_recipe(url = 'http://allrecipes.com/Recipe/Chef-Johns-Stuffed-Peppers/Detail.aspx?evt19=1&referringHubId=80'):
+def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'):
     if len(sys.argv) > 1:
         url = sys.argv[1]
 
