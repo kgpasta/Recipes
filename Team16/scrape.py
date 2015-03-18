@@ -37,8 +37,6 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
             name = ingredient.find(id="lblIngName").text
             preparation = re.findall('(?:[A-z]*ed)',name)
             prepdescription = re.findall('(?:[A-z]*ly)', name)
-            for word in preparation + prepdescription:
-               name = name.replace(word + " ", "")
             
         else:
             name = " "
@@ -76,7 +74,7 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
             
     for method in recipe["cooking methods"]:
         if method in primary_cooking_methods:
-            recipe["primary cooking methods"] = method
+            recipe["primary cooking method"] = method
 
     #print recipe["tools"]
     #print recipe["methods"]

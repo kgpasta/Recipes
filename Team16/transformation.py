@@ -251,5 +251,9 @@ def createSubstitute(substitute, substituteList, foodTable, ingredient):
     else:
         newIngredient["name"] = substitute
         
+    newIngredient["preparation"] = ingredient["preparation"]
+    newIngredient["prep-description"] = ingredient["prep-description"]
+    newIngredient["descriptor"] = ""
+        
     return newIngredient
             
