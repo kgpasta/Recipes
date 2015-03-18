@@ -1,0 +1,34 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<div class="row col-lg-12">
+	<h3>{{ context.recipe_name }}</h3>
+	<h3>URL: <a href="{{ context.recipe_url }}">{{ context.recipe_url }}</a></h3>
+	<h4>Time: {{ context.time }}</h4>
+	<h4>Servings: {{ context.servings }}</h4>
+	<h4>Primary Cooking Method: {{ context.primary_cooking_method}}
+	<h4>Methods: <ul>{% for item in context.cooking_methods %}<li>{{ item }}</li> {% endfor %}</ul></h4>
+	<h4>Tools: <ul>{% for item in context.cooking_tools %}<li>{{ item }}</li> {% endfor %}</ul></h4>
+
+
+</div>
+
+<div class = "row">
+	<h2> Original Recipe </h2>
+	<div class = "container span4">
+		{% for item in context.ingredients %}
+		<p>{{item.descriptor}} {{item.name}} | {{item.amount}} {{item.measurement}} </p>
+		{% endfor %}
+
+	 </div>
+
+	 <h2> New Recipe </h2>
+	<div class = "container span8"> 		
+		{% for item in context.new_ingredients %}
+		<p>{{item.descriptor}} {{item.name}} | {{item.amount}} {{item.measurement}} </p>
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock %}

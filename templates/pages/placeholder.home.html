@@ -1,0 +1,34 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<div class="row">
+<form action="." method="POST">
+		<div class="row">
+			<h3>Paste In A Recipe from AllRecipes.com</h3>
+			<input type="text" class="form-control" name="recipe_url" value = "http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken">
+		</div>
+
+		<div class="row">
+			<h3>Select Mutation</h3>
+
+				<select name = transformation>
+					<option value = "vegetarian"> Vegetarian </option>
+					<option value = "normal"> Non Vegetarian </option>
+					<option value = "vegan"> Vegan </option>
+					<option value = "nonvegan"> Non Vegan </option>
+					<option value = "italian"> Italian </option>
+					<option value = "mexican"> Mexican </option>
+					<option value = "lowcal"> Low Calorie </option>
+					<option value = "lowfat"> Low Fat </option>
+				</select>
+
+			<input type="submit" class="btn btn-default" name="home" value="Submit">	
+
+		</div>
+
+
+	</form>
+</div>
+
+{% endblock %}
