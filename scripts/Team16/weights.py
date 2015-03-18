@@ -19,9 +19,13 @@ def convertWeight(ingredient, newIngredient, weightTable):
     else:  
         oldAmount = float(ingredient["amount"])
     oldMeasurement = ingredient["measurement"]
-    oldWeights = []
     if oldID in weightTable:
         oldWeights = weightTable[oldID]
+    else:
+        newIngredient["ID"] = "00000"
+        newIngredient["amount"] = 1
+        newIngredient["measurement"] = "piece"
+        return   
     
     grams = -1
     
@@ -36,9 +40,13 @@ def convertWeight(ingredient, newIngredient, weightTable):
         grams = float(oldWeights[0]["grams"]) * factor
         
     newID = newIngredient["ID"]
-    newWeights = []
     if newID in weightTable:
         newWeights = weightTable[newID]
+    else:
+        newIngredient["ID"] = "00000"
+        newIngredient["amount"] = 1
+        newIngredient["measurement"] = "piece"
+        return   
 
     newIngredient["amount"] = -1    
     
