@@ -15,7 +15,7 @@ def check_tools(answer, stud):
 
     for s in stud:
         if s in answer:
-            return s
+            print s
             score += 1
             answer.remove(s)
             stud.remove(s)
@@ -29,7 +29,7 @@ def check_tools(answer, stud):
             complement = set(expstud[s]) ^ set(expans[word]['words'])
             intersection = set(expstud[s]) & set(expans[word]['words'])
             newscore = float(len(intersection))/(len(intersection)+len(complement))
-            return "%s, %s, %d, %d, %f"%(s,word,len(intersection),len(complement),newscore)
+            print "%s, %s, %d, %d, %f"%(s,word,len(intersection),len(complement),newscore)
             if newscore > tmpscore:
                 tmpscore = newscore
                 tmpmatch = word
@@ -51,11 +51,11 @@ def check_ingredients(answer,stud):
     for x in range(min([len(answer),len(stud)])):
         for ind in ['name','measurement','quantity','descriptor','preparation','prep-description']:
             if ind in stud[x]:
-                return stud[x][ind]
-                return answer[x][ind]
+                print stud[x][ind]
+                print answer[x][ind]
                 if stud[x][ind] in answer[x][ind]:
                     score += 1
-        return "---"
+        print "---"
         scores.append(min([score,answer[x]['max']]))
         score = 0
 
@@ -68,7 +68,7 @@ def get_file(fn):
 
 def main(init=False,input_type="url",filename=None):
     """Pass 'init' as a command line variable if this is your
-    first time running the program and you want it to return the
+    first time running the program and you want it to print the
     column headers to the file. 
 
     Set input_type to 'html' if your program accepts HTML rather
@@ -115,9 +115,9 @@ def main(init=False,input_type="url",filename=None):
             stud = stud['ingredients']
             tmping = check_ingredients(answer['ingredients'],stud)/float(answer['max']['ingredients'])
             scores['ingredients'] += tmping
-            return "%.3f\t%d\t%.3f\t%.3f"%(tmping,tmpmeth,tmpmeths,tmptool)
+            print "%.3f\t%d\t%.3f\t%.3f"%(tmping,tmpmeth,tmpmeths,tmptool)
         else:
-            return "student answer error"
+            print "student answer error"
 
     row = ["Team %d"%TEAM]
     row.extend([scores[k] for k in keys])

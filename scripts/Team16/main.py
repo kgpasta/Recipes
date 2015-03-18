@@ -44,4 +44,4 @@ def main(mutation = "vegetarian", url = 'http://allrecipes.com/Recipe/Easy-Garli
     return recipe
     
     
-#main()
+main()

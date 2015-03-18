@@ -1,4 +1,5 @@
 from urllib2 import urlopen
+import urllib2
 from bs4 import BeautifulSoup
 import nltk
 import sys
@@ -10,16 +11,40 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
     if len(sys.argv) > 1:
         url = sys.argv[1]
 
-    # cookware_page = urlopen(
-    #     'http://en.wikipedia.org/wiki/Cookware_and_bakeware')
 
-    # cook_soup = BeautifulSoup(cookware_page.read())
+    wiki = "http://en.wikipedia.org/wiki/List_of_food_preparation_utensils"
+    header = {'User-Agent': 'Mozilla/5.0'} #Needed to prevent 403 error on Wikipedia
+    req = urllib2.Request(wiki,headers=header)
+    page = urllib2.urlopen(req)
+    soup = BeautifulSoup(page)
+     
+    
+    cooking_tools = [] 
+    table = soup.find("table", { "class" : "wikitable plainrowheaders" })
+    for row in table.findAll("tr"):
+        cells = row.findAll("th")
+        cooking_tools.append(str(cells[0].findAll(text=True)[0]).lower())
 
-    # list_of_cookware = cook_soup.find_all(class_ = 'mw-redirect').contents
-    # print(list_of_cookware)
+    #print cooking_tools
 
-    cooking_tools = ['spoon', 'cup', 'bowl', 'cutting board', 'knife', 'peeler', 'colander', 'strainer', 'grater', 'can opener', 'saucepan', 'frying pan', 'pan', 'baking dish', 'blender', 'spatula', 'tongs', 'garlic press', 'ladle', 'ricer', 'pot holder', 'rolling pin', 'scissors', 'whisk', 'skillet', 'wok', 'baking sheet', 'casserole dish', 'pot', 'slow cooker']
-    cooking_methods = ['peel', 'grate', 'cut', 'slice', 'sieve', 'knead', 'break', 'boil', 'crack', 'fry', 'scramble', 'stir', 'add', 'bake', 'saute', 'simmer', 'pour', 'chop', 'blend', 'brown', 'carmelise', 'beat', 'dice', 'melt', 'poach', 'toss', 'roast', 'broil', 'roast', 'grill']
+    # wiki = "http://en.wikipedia.org/wiki/List_of_cooking_techniques"
+    # header = {'User-Agent': 'Mozilla/5.0'} #Needed to prevent 403 error on Wikipedia
+    # req = urllib2.Request(wiki,headers=header)
+    # page = urllib2.urlopen(req)
+    # soup = BeautifulSoup(page)
+     
+    
+    # cooking_methods = [] 
+    # links = soup.find_all('a')
+    # for link in links:
+    #     cooking_methods.append((link.text).encode('utf-8').lower())
+    #print cooking_methods
+    # for row in table.findAll("tr"):
+    #     cells = row.findAll("th")
+    #     cooking_tools.append(str(cells[0].findAll(text=True)[0]).lower())
+
+    #cooking_tools = ['spoon', 'cup', 'bowl', 'cutting board', 'knife', 'peeler', 'colander', 'strainer', 'grater', 'can opener', 'saucepan', 'frying pan', 'pan', 'baking dish', 'blender', 'spatula', 'tongs', 'garlic press', 'ladle', 'ricer', 'pot holder', 'rolling pin', 'scissors', 'whisk', 'skillet', 'wok', 'baking sheet', 'casserole dish', 'pot', 'slow cooker']
+    cooking_methods = ['peel', 'grate', 'cut', 'slice', 'simmer', 'pour', 'chop', 'blend', 'brown', 'carmelise', 'beat', 'dice', 'melt', 'poach', 'toss', 'roast', 'broil', 'roast', 'grill', 'sieve', 'knead', 'break', 'boil', 'crack', 'fry', 'scramble', 'stir', 'add', 'bake', 'saute',]
     primary_cooking_methods = ["bake", "fry", "broil", "roast", "grill"]
 
     recipe_page = urlopen(url)
@@ -28,8 +53,10 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
     soup = BeautifulSoup(recipe_page.read())
     recipe["title"] = str(soup.find(id="itemTitle").string)
     recipe["servings"] = str(soup.find(id="lblYield").string)
-    #recipe["time"] = soup.find(class_="emp-orange").string + soup.find(class_="time").string
-    recipe["time"] = re.sub(' +', ' ', soup.find_all(class_="time")[0].text)
+    # recipe["time"] = soup.find(class_="emp-orange").string 
+    # recipe["time"]
+    recipe["time"] = re.sub(' +', ' ', soup.find_all(class_="time")[0].text.encode('utf-8'))
+    #print recipe["time"]
 
     ingredients_span = soup.find_all(itemprop="ingredients")
     ingredients = []
@@ -51,7 +78,7 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
         else:
             amount = " "
             measurement = " "
-        ingredients.append({"name": (name), "amount": str(amount), "measurement": str(measurement), "preparation" : (preparation), "prep-description": (prepdescription), "descriptor": ""})
+        ingredients.append({"name": (name), "quantity": str(amount), "measurement": str(measurement), "preparation" : (preparation), "prep-description": (prepdescription), "descriptor": ""})
 
     recipe["ingredients"] = ingredients
 
@@ -87,4 +114,4 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
     #print recipe
 
     return recipe
-get_recipe()
+#get_recipe()

@@ -9,21 +9,21 @@ import fractions
 def convertWeight(ingredient, newIngredient, weightTable):
     if "ID" not in newIngredient:
         newIngredient["ID"] = "00000"
-        newIngredient["amount"] = 1
+        newIngredient["quantity"] = 1
         newIngredient["measurement"] = "piece"
         return    
     
     oldID = ingredient["ID"]
-    if ingredient["amount"].find("/") > -1:
-        oldAmount = float(fractions.Fraction(ingredient["amount"]))
+    if ingredient["quantity"].find("/") > -1:
+        oldquantity = float(fractions.Fraction(ingredient["quantity"]))
     else:  
-        oldAmount = float(ingredient["amount"])
+        oldquantity = float(ingredient["quantity"])
     oldMeasurement = ingredient["measurement"]
     if oldID in weightTable:
         oldWeights = weightTable[oldID]
     else:
         newIngredient["ID"] = "00000"
-        newIngredient["amount"] = 1
+        newIngredient["quantity"] = 1
         newIngredient["measurement"] = "piece"
         return   
     
@@ -31,12 +31,12 @@ def convertWeight(ingredient, newIngredient, weightTable):
     
     for entry in oldWeights:
         if matchMeasure(oldMeasurement, entry["unit"]):
-            factor = oldAmount / float(entry["amount"])
+            factor = oldquantity / float(entry["quantity"])
             grams = float(entry["grams"]) * factor
             break
         
     if grams == -1:
-        factor = oldAmount / float(oldWeights[0]["amount"])
+        factor = oldquantity / float(oldWeights[0]["quantity"])
         grams = float(oldWeights[0]["grams"]) * factor
         
     newID = newIngredient["ID"]
@@ -44,22 +44,22 @@ def convertWeight(ingredient, newIngredient, weightTable):
         newWeights = weightTable[newID]
     else:
         newIngredient["ID"] = "00000"
-        newIngredient["amount"] = 1
+        newIngredient["quantity"] = 1
         newIngredient["measurement"] = "piece"
         return   
 
-    newIngredient["amount"] = -1    
+    newIngredient["quantity"] = -1    
     
     for entry in newWeights:
         if matchMeasure(oldMeasurement, entry["unit"]):
             factor = grams / float(entry["grams"])
-            newIngredient["amount"] = roundToMeasure(float(entry["amount"]) * factor)
+            newIngredient["quantity"] = roundToMeasure(float(entry["quantity"]) * factor)
             newIngredient["measurement"] = entry["unit"]
             break
             
-    if newIngredient["amount"] == -1:
+    if newIngredient["quantity"] == -1:
         factor = grams / float(newWeights[0]["grams"])
-        newIngredient["amount"] = roundToMeasure(float(newWeights[0]["amount"]) * factor)
+        newIngredient["quantity"] = roundToMeasure(float(newWeights[0]["quantity"]) * factor)
         newIngredient["measurement"] = newWeights[0]["unit"]
         
 def matchMeasure(word1, word2):

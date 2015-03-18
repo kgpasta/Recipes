@@ -45,7 +45,7 @@ def parseWeights():
         lineArray = line.split("^")
         weight = {}
         weight["ID"] = lineArray[0]
-        weight["amount"] = lineArray[2]
+        weight["quantity"] = lineArray[2]
         weight["unit"] = lineArray[3]
         weight["grams"] = lineArray[4].replace("\n","")
         if lineArray[0] in weights.keys():
