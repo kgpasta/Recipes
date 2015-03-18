@@ -16,10 +16,10 @@ def main():
     
     ingredients.identifyIngredients(recipe,foodTable,stoplist)
     
-    #transformation.transformVegetarian(recipe, foodTable, weightTable) 
+    transformation.transformVegetarian(recipe, foodTable, weightTable) 
     #transformation.transformNonVegetarian(recipe, foodTable, weightTable)
     #transformation.transformVegan(recipe, foodTable, weightTable)
-    transformation.transfromNonVegan(recipe,foodTable, weightTable)
+    #transformation.transformNonVegan(recipe,foodTable, weightTable)
     #transformation.transformCuisine("Mexican", recipe, foodTable, weightTable)
     #transformation.transformCuisine("Italian", recipe, foodTable, weightTable)
     

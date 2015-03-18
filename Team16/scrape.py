@@ -19,8 +19,8 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
     # print(list_of_cookware)
 
     cooking_tools = ['spoon', 'cup', 'bowl', 'cutting board', 'knife', 'peeler', 'colander', 'strainer', 'grater', 'can opener', 'saucepan', 'frying pan', 'pan', 'baking dish', 'blender', 'spatula', 'tongs', 'garlic press', 'ladle', 'ricer', 'pot holder', 'rolling pin', 'scissors', 'whisk', 'skillet', 'wok', 'baking sheet', 'casserole dish', 'pot', 'slow cooker']
-    cooking_methods = ['peel', 'grate', 'cut', 'slice', 'sieve', 'knead', 'break', 'boil', 'crack', 'fry', 'scramble', 'stir', 'add', 'bake', 'saute', 'simmer', 'pour', 'chop', 'blend', 'brown', 'carmelise', 'beat', 'dice', 'melt', 'poach', 'toss', 'roast']
-
+    cooking_methods = ['peel', 'grate', 'cut', 'slice', 'sieve', 'knead', 'break', 'boil', 'crack', 'fry', 'scramble', 'stir', 'add', 'bake', 'saute', 'simmer', 'pour', 'chop', 'blend', 'brown', 'carmelise', 'beat', 'dice', 'melt', 'poach', 'toss', 'roast', 'broil', 'roast', 'grill']
+    primary_cooking_methods = ["bake", "fry", "broil", "roast", "grill"]
 
     recipe_page = urlopen(url)
     recipe = {}
@@ -35,6 +35,11 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
     for ingredient in ingredients_span:
         if (ingredient.find(id="lblIngName").text is not None):
             name = ingredient.find(id="lblIngName").text
+            preparation = re.findall('(?:[A-z]*ed)',name)
+            prepdescription = re.findall('(?:[A-z]*ly)', name)
+            for word in preparation + prepdescription:
+               name = name.replace(word + " ", "")
+            
         else:
             name = " "
         if (ingredient.find(id="lblIngAmount") is not None):
@@ -48,7 +53,7 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
             amount = " "
             measurement = " "
         ingredients.append(
-            {"name": name, "amount": amount, "measurement": measurement})
+            {"name": name, "amount": amount, "measurement": measurement, "preparation" : preparation, "prep-description": prepdescription, "descriptor": ""})
     recipe["ingredients"] = ingredients
 
     directions_div = soup.find(class_ = 'directions')
@@ -58,20 +63,24 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
     for step in directions:
         steps_string += (' ' + step.span.text)
 
-    recipe["tools"] = []   
-    recipe["methods"] = []
+    recipe["cooking tools"] = []   
+    recipe["cooking methods"] = []
 
     for tool in cooking_tools:   
         if tool in steps_string:
-            recipe["tools"].append(tool)
+            recipe["cooking tools"].append(tool)
 
     for method in cooking_methods:
         if method in steps_string:
-            recipe["methods"].append(method)
+            recipe["cooking methods"].append(method)
+            
+    for method in recipe["cooking methods"]:
+        if method in primary_cooking_methods:
+            recipe["primary cooking methods"] = method
 
 
-    print recipe["tools"]
-    print recipe["methods"]
+    #print recipe["cooking tools"]
+    print recipe["cooking methods"]
     #print recipe
 
     return recipe

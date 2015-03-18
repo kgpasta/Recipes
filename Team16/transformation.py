@@ -23,8 +23,8 @@ grains = ['1800','2000']
 cuisineFoodGroups = meats + spicesAndHerbs + sauces + grains
 veggieSubWords = ["tofu", "potatoes", "beans", "lentil", "eggplant", "mushrooms", "tempeh", "tap water"]
 nonVeggieSubWords = ["chicken", "sausage", "pork", "beef", "lamb", "salmon"]
-veganSubWords = ["tofu", "tempeh", "beans", "lentil", "eggplant", "mushrooms", "soymilk", "margarine-like", "maple syrup", "tap water"]
-nonVeggieSubWords = ["chicken", "sausage", "pork", "beef", "lamb", "salmon", "milk", "butter", "honey"]
+veganSubWords = ["tofu", "potatoes", "tempeh", "beans", "lentil", "eggplant", "mushrooms", "soymilk", "margarine-like", "maple syrup", "tap water"]
+nonVeganSubWords = ["chicken", "sausage", "pork", "beef", "lamb", "salmon", "milk", "butter", "honey"]
 mexicanSubWords = { 
     "grains" : ["flour tortilla", "white rice", "brown rice"],
     "sauces" : ["salsa sauce", "hot sauce"], 
@@ -41,7 +41,7 @@ def transformVegetarian(recipe, foodTable, weightTable):
     recipe["title"] = "Vegetarian " + recipe["title"]
     
     for index,ingredient in enumerate(ingredients):
-        if ingredient["foodGroup"] in nonVeg or ingredient["name"].find("broth") > -1:
+        if ingredient["foodGroup"] in nonVeg or ingredient["name"].find("broth") > -1 or ingredient["name"].find("stock") > -1:
             newIngredient = veggieSub(ingredient, foodTable)
             weights.convertWeight(ingredient, newIngredient, weightTable)
             ingredients[index] = newIngredient
@@ -65,7 +65,7 @@ def veggieSub(ingredient, foodTable):
     else:
         substitute = "tap water"
     
-    return createSubstitute(substitute, veggieSubs, foodTable)
+    return createSubstitute(substitute, veggieSubs, foodTable, ingredient)
     
 def transformNonVegetarian(recipe, foodTable, weightTable):
     ingredients = recipe["ingredients"]
@@ -73,7 +73,7 @@ def transformNonVegetarian(recipe, foodTable, weightTable):
     
     for index,ingredient in enumerate(ingredients):
         for word in veggieSubWords:
-            if word in ingredient["name"]:
+            if ingredient["name"].find(word) > -1:
                 newIngredient = nonVeggieSub(ingredient, foodTable, word)
                 weights.convertWeight(ingredient, newIngredient, weightTable)
                 ingredients[index] = newIngredient
@@ -105,7 +105,7 @@ def transformVegan(recipe, foodTable, weightTable):
     recipe["title"] = "Vegan " + recipe["title"]
     
     for index,ingredient in enumerate(ingredients):
-        if ingredient["foodGroup"] in nonVegan or ingredient["name"].find("honey") > -1 or ingredient["name"].find("broth") > -1:
+        if ingredient["foodGroup"] in nonVegan or ingredient["name"].find("honey") > -1 or ingredient["name"].find("broth") > -1 or ingredient["name"].find("stock") > -1:
             newIngredient = veganSub(ingredient, foodTable)
             weights.convertWeight(ingredient, newIngredient, weightTable)
             ingredients[index] = newIngredient
@@ -144,7 +144,7 @@ def transformNonVegan(recipe, foodTable, weightTable):
     
     for index,ingredient in enumerate(ingredients):
         for word in veganSubWords:
-            if word in ingredient["name"]:
+            if ingredient["name"].find(word) > -1:
                 newIngredient = nonVeganSub(ingredient, foodTable, word)
                 weights.convertWeight(ingredient, newIngredient, weightTable)
                 ingredients[index] = newIngredient
@@ -165,11 +165,11 @@ def nonVeganSub(ingredient, foodTable, word):
         substitute = "lamb"
     elif word == "tempeh":
         substitute = "salmon"
-    elif word == "soymilk:
+    elif word == "soymilk":
         substitute = "milk"
-    elif word == "maple syrup"
+    elif word == "maple syrup":
         substitute = "honey"
-    elif word == "margarine-like"
+    elif word == "margarine-like":
         substitute = "butter"
     
     if substitute == None:
@@ -234,9 +234,10 @@ def findSubs(foodTable, subList, restrictions = []):
                     
     return subs
         
-def createSubstitute(substitute, substituteList, foodTable):
+def createSubstitute(substitute, substituteList, foodTable, ingredient):
     newIngredient = {}
     matchArray = {}
+    substitute = substitute + ' '.join(ingredient["preparation"]) + ' '.join(ingredient["prep-description"])
     for sub in substituteList:
         match = ingredients.arrayMatch(substitute, sub)
         if match[0] > 0:
