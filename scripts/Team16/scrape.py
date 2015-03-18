@@ -28,14 +28,15 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
     soup = BeautifulSoup(recipe_page.read())
     recipe["title"] = str(soup.find(id="itemTitle").string)
     recipe["servings"] = str(soup.find(id="lblYield").string)
-    recipe["time"] = str(re.sub(' +', ' ', soup.find_all(class_="time")[0].text))
+    #recipe["time"] = soup.find(class_="emp-orange").string + soup.find(class_="time").string
+    recipe["time"] = re.sub(' +', ' ', soup.find_all(class_="time")[0].text)
 
     ingredients_span = soup.find_all(itemprop="ingredients")
     ingredients = []
     for ingredient in ingredients_span:
         if (ingredient.find(id="lblIngName").text is not None):
             name = ingredient.find(id="lblIngName").text
-            preparation = re.findall('(?:[A-z]*ed)',name)
+            preparation = re.findall('(?:[A-z]*ed)', name)
             prepdescription = re.findall('(?:[A-z]*ly)', name)
             
         else:
@@ -86,4 +87,4 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
     #print recipe
 
     return recipe
-#get_recipe()
+get_recipe()

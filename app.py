@@ -74,7 +74,7 @@ def recipe_submitted(mutation, recipe_url):
     new_recipe = main(mutation, recipe_url)
     context = {}
     context['recipe_url'] = recipe_url
-    context['recipe_name'] = recipe['title']
+    context['recipe_name'] = new_recipe['title']
     context['time'] = recipe['time']
     context['servings'] = recipe['servings']
     context['primary_cooking_method'] = recipe['primary cooking method']
