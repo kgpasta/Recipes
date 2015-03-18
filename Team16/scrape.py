@@ -26,9 +26,9 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
     recipe = {}
 
     soup = BeautifulSoup(recipe_page.read())
-    recipe["title"] = soup.find(id="itemTitle").string
-    recipe["servings"] = soup.find(id="lblYield").string
-    recipe["time"] = re.sub(' +', ' ', soup.find_all(class_="time")[0].text)
+    recipe["title"] = str(soup.find(id="itemTitle").string)
+    recipe["servings"] = str(soup.find(id="lblYield").string)
+    recipe["time"] = str(re.sub(' +', ' ', soup.find_all(class_="time")[0].text))
 
     ingredients_span = soup.find_all(itemprop="ingredients")
     ingredients = []
@@ -52,8 +52,8 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
         else:
             amount = " "
             measurement = " "
-        ingredients.append(
-            {"name": name, "amount": amount, "measurement": measurement, "preparation" : preparation, "prep-description": prepdescription, "descriptor": ""})
+        ingredients.append({"name": str(name), "amount": str(amount), "measurement": str(measurement), "preparation" : preparation, "prep-description": prepdescription, "descriptor": ""})
+
     recipe["ingredients"] = ingredients
 
     directions_div = soup.find(class_ = 'directions')
@@ -78,10 +78,9 @@ def get_recipe(url = 'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
         if method in primary_cooking_methods:
             recipe["primary cooking methods"] = method
 
-
-    #print recipe["cooking tools"]
-    print recipe["cooking methods"]
-    #print recipe
+    #print recipe["tools"]
+    #print recipe["methods"]
+    print recipe
 
     return recipe
 get_recipe()
