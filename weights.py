@@ -4,7 +4,7 @@ Created on Tue Mar 17 14:58:15 2015
 
 @author: Kaustubh
 """
-from fractions import Fraction
+import fractions
 
 def convertWeight(ingredient, newIngredient, weightTable):
     if "ID" not in newIngredient:
@@ -15,7 +15,7 @@ def convertWeight(ingredient, newIngredient, weightTable):
     
     oldID = ingredient["ID"]
     if ingredient["amount"].find("/") > -1:
-        oldAmount = float(Fraction(ingredient["amount"]))
+        oldAmount = float(fractions.Fraction(ingredient["amount"]))
     else:  
         oldAmount = float(ingredient["amount"])
     oldMeasurement = ingredient["measurement"]
@@ -43,6 +43,7 @@ def convertWeight(ingredient, newIngredient, weightTable):
             factor = grams / float(entry["grams"])
             newIngredient["amount"] = roundToMeasure(float(entry["amount"]) * factor)
             newIngredient["measurement"] = entry["unit"]
+            break
             
     if newIngredient["amount"] == -1:
         factor = grams / float(newWeights[0]["grams"])
@@ -50,6 +51,15 @@ def convertWeight(ingredient, newIngredient, weightTable):
         newIngredient["measurement"] = newWeights[0]["unit"]
         
 def matchMeasure(word1, word2):
+    word1.replace("tsp", "teaspoon")
+    word1.replace("tbsp", "tablespoon")
+    word1.replace("oz", "ounces")
+    word1.replace("fl", "fluid")
+    word2.replace("tsp", "teaspoon")
+    word2.replace("tbsp", "tablespoon")
+    word2.replace("oz", "ounces")
+    word2.replace("fl", "fluid")
+    
     if word1 == word2:
         return True
     elif (word1 + "s") == word2:
