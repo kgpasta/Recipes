@@ -22,7 +22,9 @@ nonVegan = nonVeg + dairyAndEgg + fats
 grains = ['1800','2000']
 cuisineFoodGroups = meats + spicesAndHerbs + sauces + grains
 veggieSubWords = ["tofu", "potatoes", "beans", "lentil", "eggplant", "mushrooms", "tempeh", "tap water"]
+nonVeggieSubWords = ["chicken", "sausage", "pork", "beef", "lamb", "salmon"]
 veganSubWords = ["tofu", "tempeh", "beans", "lentil", "eggplant", "mushrooms", "soymilk", "margarine-like", "maple syrup", "tap water"]
+nonVeggieSubWords = ["chicken", "sausage", "pork", "beef", "lamb", "salmon", "milk", "butter", "honey"]
 mexicanSubWords = { 
     "grains" : ["flour tortilla", "white rice", "brown rice"],
     "sauces" : ["salsa sauce", "hot sauce"], 
@@ -65,6 +67,39 @@ def veggieSub(ingredient, foodTable):
     
     return createSubstitute(substitute, veggieSubs, foodTable)
     
+def transformNonVegetarian(recipe, foodTable, weightTable):
+    ingredients = recipe["ingredients"]
+    recipe["title"] = "Non-Vegetarian " + recipe["title"]
+    
+    for index,ingredient in enumerate(ingredients):
+        for word in veggieSubWords:
+            if word in ingredient["name"]:
+                newIngredient = nonVeggieSub(ingredient, foodTable, word)
+                weights.convertWeight(ingredient, newIngredient, weightTable)
+                ingredients[index] = newIngredient
+                break
+            
+def nonVeggieSub(ingredient, foodTable, word):
+    nonVeggieSubs = findSubs(foodTable, nonVeggieSubWords)
+    substitute = None
+    if word == "tofu":
+        substitute = "chicken"
+    elif word == "beans":
+        substitute = "sausage"
+    elif word == "potatoes":
+        substitute = "pork"
+    elif word == "lentils":
+        substitute = "beef"
+    elif word == "mushrooms":
+        substitute = "lamb"
+    elif word == "tempeh":
+        substitute = "salmon"
+    
+    if substitute == None:
+        return ingredient
+    
+    return createSubstitute(substitute, nonVeggieSubs, foodTable)
+    
 def transformVegan(recipe, foodTable, weightTable):
     ingredients = recipe["ingredients"]
     recipe["title"] = "Vegan " + recipe["title"]
@@ -91,8 +126,6 @@ def veganSub(ingredient,foodTable):
     elif ingredient["foodGroup"] in dairyAndEgg:
         if ingredient["name"].find("egg") > -1:
             substitute = "tofu"
-        elif ingredient["name"].find("yogurt") > -1:
-            substitute = "soy yogurt"
         else:
             substitute = "soymilk"
     elif ingredient["foodGroup"] in fats:
@@ -104,6 +137,45 @@ def veganSub(ingredient,foodTable):
             substitute = "tap water"
     
     return createSubstitute(substitute, veganSubs, foodTable)
+    
+def transformNonVegan(recipe, foodTable, weightTable):
+    ingredients = recipe["ingredients"]
+    recipe["title"] = "Non-Vegan " + recipe["title"]
+    
+    for index,ingredient in enumerate(ingredients):
+        for word in veganSubWords:
+            if word in ingredient["name"]:
+                newIngredient = nonVeganSub(ingredient, foodTable, word)
+                weights.convertWeight(ingredient, newIngredient, weightTable)
+                ingredients[index] = newIngredient
+                break
+            
+def nonVeganSub(ingredient, foodTable, word):
+    nonVeganSubs = findSubs(foodTable, nonVeganSubWords)
+    substitute = None
+    if word == "tofu":
+        substitute = "chicken"
+    elif word == "beans":
+        substitute = "sausage"
+    elif word == "potatoes":
+        substitute = "pork"
+    elif word == "lentils":
+        substitute = "beef"
+    elif word == "mushrooms":
+        substitute = "lamb"
+    elif word == "tempeh":
+        substitute = "salmon"
+    elif word == "soymilk:
+        substitute = "milk"
+    elif word == "maple syrup"
+        substitute = "honey"
+    elif word == "margarine-like"
+        substitute = "butter"
+    
+    if substitute == None:
+        return ingredient
+    
+    return createSubstitute(substitute, nonVeganSubs, foodTable)
     
 def transformCuisine(cuisine, recipe, foodTable, weightTable):
     ingredients = recipe["ingredients"]
